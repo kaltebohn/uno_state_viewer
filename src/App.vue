@@ -151,13 +151,13 @@ export default {
         </thead>
         <tbody>
           <tr v-for="playerIdx in [0, 1, 2, 3]">
-            <td class="seat-cell">
+            <td :class="['seat-cell', {'current-player-cell' : playerIdx === states[stateIdx].currentPlayer}]">
               {{ states[stateIdx].playerSeats[playerIdx] }}
             </td>
-            <td class="score-cell">
+            <td :class="['score-cell', {'current-player-cell' : playerIdx === states[stateIdx].currentPlayer}]">
               {{ states[stateIdx].playerScores[playerIdx] }}
             </td>
-            <td class="player-cards-cell">
+            <td :class="['player-cards-cell', {'current-player-cell' : playerIdx === states[stateIdx].currentPlayer}]">
               <div class="cards">
                 <div v-for="card in states[stateIdx].playerCards[playerIdx]" :class="['card', parseColor(card), {'wild-customizable' : (parsePattern(card) === 'W')}]">
                   {{ parsePattern(card) }}
@@ -265,5 +265,9 @@ export default {
 
   .player-cards-cell {
     width: 84%;
+  }
+
+  .current-player-cell {
+    background-color: palevioletred;
   }
 </style>
