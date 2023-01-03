@@ -164,7 +164,7 @@ export default {
               {{ states[stateIdx].playerScores[playerIdx] }}
             </td>
             <td :class="['player-cards-cell', {'current-player-cell' : playerIdx === states[stateIdx].currentPlayer}]">
-              <div class="cards">
+              <div class="cards" v-if="states[stateIdx].playerCards[playerIdx] !== 'Empty'">
                 <div v-for="card in states[stateIdx].playerCards[playerIdx]" :class="['card', parseColor(card), {'wild-customizable' : (parsePattern(card) === 'WC')}]">
                   {{ parsePattern(card) }}
                 </div>
