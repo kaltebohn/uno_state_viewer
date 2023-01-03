@@ -112,20 +112,20 @@ export default {
 </script>
 
 <template>
-  <div class="area-log-loading">
+  <div class="log-loading-area">
     <h2>ファイル読み込み</h2>
     <p>UnoStateのJSONを読み込ませてください。</p>
     <input type="file" ref="file" @change="loadLog"/>
   </div>
   <br>
-  <div class="area-state-cursor" v-if="states.length > 0">
+  <div class="state-cursor-area" v-if="states.length > 0">
     <h2>表示中の状態</h2>
     <p>状態: {{ stateIdx + 1 }} / {{ states.length }}</p>
     <input type="button" value="前状態" @click="decrimentStateIdx">
     <input type="button" value="次状態" @click="incrementStateIdx">
   </div>
   <br>
-  <div class="area-table-information" v-if="states.length > 0">
+  <div class="table-information-area" v-if="states.length > 0">
     <h2>テーブル情報</h2>
     <div>
       <ul>
@@ -144,20 +144,20 @@ export default {
       <table>
         <thead>
           <tr>
-            <th>プレイヤの席番号</th>
-            <th>プレイヤの得点</th>
-            <th>プレイヤの手札</th>
+            <th class="seat-cell">席番号</th>
+            <th class="score-cell">得点</th>
+            <th class="player-cards-cell">手札</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="playerIdx in [0, 1, 2, 3]">
-            <td>
+            <td class="seat-cell">
               {{ states[stateIdx].playerSeats[playerIdx] }}
             </td>
-            <td>
+            <td class="score-cell">
               {{ states[stateIdx].playerScores[playerIdx] }}
             </td>
-            <td>
+            <td class="player-cards-cell">
               <div class="cards">
                 <div v-for="card in states[stateIdx].playerCards[playerIdx]" :class="['card', parseColor(card), {'wild-customizable' : (parsePattern(card) === 'W')}]">
                   {{ parsePattern(card) }}
@@ -172,24 +172,30 @@ export default {
 </template>
 
 <style>
-  .area-log-loading {
+  .log-loading-area {
     background-color: palevioletred;
     margin: 1em 0;
     padding: 1em;
+    width: 60em;
   }
 
-  .area-state-cursor {
+  .state-cursor-area {
     background-color: paleturquoise;
     display: block;
     margin: 1em 0;
     padding: 1em;
+    position: sticky;
+    top: 0;
+    width: 60em;
+    z-index: 1;
   }
 
-  .area-table-information {
+  .table-information-area {
     background-color: palegreen;
     display: block;
     margin: 1em 0;
     padding: 1em;
+    width: 60em;
   }
 
 
@@ -198,8 +204,8 @@ export default {
   }
 
   .card {
-    width: 3.5em;
-    height: 5em;
+    width: 2.8em;
+    height: 4em;
     border-radius: 0.25em;
     border: 0.1em solid black;
     padding: 0.1em;
@@ -238,8 +244,26 @@ export default {
         black 40%, red 40% 55%, yellow 55% 70%, green 70% 85%, blue 85%) !important;
   }
 
-  /* divの前後を改行。 */
-  div {
-    white-space: normal;
+  table, th, td {
+    border: 0.1em solid black;
+    width: 100%;
+  }
+  th {
+    background-color: greenyellow;
+  }
+  td {
+    background-color: white;
+  }
+
+  .seat-cell {
+    width: 8%;
+  }
+
+  .score-cell {
+    width: 8%;
+  }
+
+  .player-cards-cell {
+    width: 84%;
   }
 </style>
