@@ -56,14 +56,14 @@ export default {
         return UnoPattern.Reverse;
       } else if (cardText.includes("Skip")) {
         return UnoPattern.Skip;
-      } else if (cardText.includes("Wild")) {
-        return UnoPattern.Wild;
       } else if (cardText.includes("WildDraw4")) {
         return UnoPattern.WildDraw4;
       } else if (cardText.includes("WildShuffleHands")) {
         return UnoPattern.WildShuffleHands;
       } else if (cardText.includes("WildCustomizable")) {
         return UnoPattern.WildCustomizable;
+      } else if (cardText.includes("Wild")) {
+        return UnoPattern.Wild;
       } else if (cardText.includes("0")) {
         return UnoPattern.Zero;
       } else if (cardText.includes("1")) {
@@ -131,12 +131,18 @@ export default {
       <ul>
         <li>現在のプレイヤ: {{ states[stateIdx].currentPlayer }}</li>
         <li>周順: {{ states[stateIdx].isNormalOrder ? "正順" : "逆順" }}</li>
+        <li>直前の着手: {{ states[stateIdx].lastMove }}</li>
+        <li>現在の着手型: {{ states[stateIdx].currentMoveType }}</li>
         <li v-if="states[stateIdx].boundPlayer !== -1">Bindされているプレイヤ: {{ states[stateIdx].boundPlayer }}</li>
         <li v-if="states[stateIdx].boundPlayer !== -1">Bind2の残りターン: {{ states[stateIdx].boundTurn }}</li>
       </ul>
       <h3>場のカード</h3>
-      <div :class="['card', parseColor(states[stateIdx].tableColor), {'wild-customizable' : (parsePattern(states[stateIdx].tablePattern) === 'W')}]">
+      <div :class="['card', parseColor(states[stateIdx].tableColor)]"> <!-- 場のカードは場の色の反映させたいので、白いワイルドのクラスは指定しない。 -->
         {{ parsePattern(states[stateIdx].tablePattern) }}
+      </div>
+      <h3 v-if="states[stateIdx].drawnCard !== 'Empty'">引いたカード</h3>
+      <div :class="['card', parseColor(states[stateIdx].drawnCard), {'wild-customizable' : (parsePattern(states[stateIdx].drawnCard) === 'WC')}]" v-if="states[stateIdx].drawnCard !== 'Empty'">
+        {{ parsePattern(states[stateIdx].drawnCard) }}
       </div>
     </div>
     <h2>プレイヤ情報</h2>
@@ -159,7 +165,7 @@ export default {
             </td>
             <td :class="['player-cards-cell', {'current-player-cell' : playerIdx === states[stateIdx].currentPlayer}]">
               <div class="cards">
-                <div v-for="card in states[stateIdx].playerCards[playerIdx]" :class="['card', parseColor(card), {'wild-customizable' : (parsePattern(card) === 'W')}]">
+                <div v-for="card in states[stateIdx].playerCards[playerIdx]" :class="['card', parseColor(card), {'wild-customizable' : (parsePattern(card) === 'WC')}]">
                   {{ parsePattern(card) }}
                 </div>
               </div>
@@ -235,13 +241,15 @@ export default {
   }
   .wild {
     color: white;
-    background-color: black; 
+    background: linear-gradient(to bottom,
+        black 40%, red 40% 55%, yellow 55% 70%, green 70% 85%, blue 85%);
   }
 
   /* カードの模様。色に優先。 */
   .wild-customizable {
-    background: linear-gradient(to bottom,
-        black 40%, red 40% 55%, yellow 55% 70%, green 70% 85%, blue 85%) !important;
+    color: black;
+    background: none; /* .wildの属性を無効化する。 */
+    background-color: white; 
   }
 
   table, th, td {
