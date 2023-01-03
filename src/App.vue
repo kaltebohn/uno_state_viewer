@@ -112,18 +112,20 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div class="area-log-loading">
     <h2>ファイル読み込み</h2>
     <p>UnoStateのJSONを読み込ませてください。</p>
     <input type="file" ref="file" @change="loadLog"/>
   </div>
-  <div v-if="states.length > 0">
+  <br>
+  <div class="area-state-cursor" v-if="states.length > 0">
     <h2>表示中の状態</h2>
     <p>状態: {{ stateIdx + 1 }} / {{ states.length }}</p>
     <input type="button" value="前状態" @click="decrimentStateIdx">
     <input type="button" value="次状態" @click="incrementStateIdx">
   </div>
-  <div v-if="states.length > 0">
+  <br>
+  <div class="area-table-information" v-if="states.length > 0">
     <h2>テーブル情報</h2>
     <div>
       <ul>
@@ -170,6 +172,27 @@ export default {
 </template>
 
 <style>
+  .area-log-loading {
+    background-color: palevioletred;
+    margin: 1em 0;
+    padding: 1em;
+  }
+
+  .area-state-cursor {
+    background-color: paleturquoise;
+    display: block;
+    margin: 1em 0;
+    padding: 1em;
+  }
+
+  .area-table-information {
+    background-color: palegreen;
+    display: block;
+    margin: 1em 0;
+    padding: 1em;
+  }
+
+
   .cards {
     display: flex;
   }
