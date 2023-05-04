@@ -97,7 +97,7 @@ export default {
     incrementStateIdx() {
       this.stateIdx++;
       if (this.stateIdx >= this.states.length) {
-        this.stateIdx = this.states.length;
+        this.stateIdx = this.states.length - 1;
       }
     },
     decrimentStateIdx() {
@@ -131,18 +131,11 @@ export default {
       <ul>
         <li>現在のプレイヤ: {{ states[stateIdx].currentPlayer }}</li>
         <li>周順: {{ states[stateIdx].isNormalOrder ? "正順" : "逆順" }}</li>
-        <li>直前の着手: {{ states[stateIdx].lastMove }}</li>
-        <li>現在の着手型: {{ states[stateIdx].currentMoveType }}</li>
-        <li v-if="states[stateIdx].boundPlayer !== -1">Bindされているプレイヤ: {{ states[stateIdx].boundPlayer }}</li>
-        <li v-if="states[stateIdx].boundPlayer !== -1">Bind2の残りターン: {{ states[stateIdx].boundTurn }}</li>
+        <li>現在の着手型: {{ states[stateIdx].currentActionType }}</li>
       </ul>
       <h3>場のカード</h3>
       <div :class="['card', parseColor(states[stateIdx].tableColor)]"> <!-- 場のカードは場の色の反映させたいので、白いワイルドのクラスは指定しない。 -->
         {{ parsePattern(states[stateIdx].tablePattern) }}
-      </div>
-      <h3 v-if="states[stateIdx].drawnCard !== 'Empty'">引いたカード</h3>
-      <div :class="['card', parseColor(states[stateIdx].drawnCard), {'wild-customizable' : (parsePattern(states[stateIdx].drawnCard) === 'WC')}]" v-if="states[stateIdx].drawnCard !== 'Empty'">
-        {{ parsePattern(states[stateIdx].drawnCard) }}
       </div>
     </div>
     <h2>プレイヤ情報</h2>
@@ -214,6 +207,7 @@ export default {
     height: 4em;
     border-radius: 0.25em;
     border: 0.1em solid black;
+    flex-shrink: 0;
     padding: 0.1em;
     margin: 0.1em 0.1em;
     font-size: 1em;
@@ -233,11 +227,11 @@ export default {
   }
   .green {
     color: white;
-    background-color: green; 
+    background-color: green;
   }
   .blue {
     color: white;
-    background-color: blue; 
+    background-color: blue;
   }
   .wild {
     color: white;
@@ -249,11 +243,13 @@ export default {
   .wild-customizable {
     color: black;
     background: none; /* .wildの属性を無効化する。 */
-    background-color: white; 
+    background-color: white;
   }
 
   table, th, td {
     border: 0.1em solid black;
+    overflow-x: auto;
+    table-layout: fixed;
     width: 100%;
   }
   th {
