@@ -1,35 +1,31 @@
 # uno_state_viewer
 
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
+## 環境構築
 
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### コンパイル&実行(開発用)
 
 ```sh
 npm run dev
 ```
 
-### Compile and Minify for Production
+### コンパイル
 
 ```sh
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+### 実行
 
 ```sh
-npm run lint
+npm run preview
 ```
+
+## 使い方
+1. 実行後、表示されるURLのページを開いてください。
+2. 開いたページで、「ファイルを選択」ボタンをクリックして、読み込ませたいJSONファイルをアップロードしてください。
+3. 「表示中の状態」エリアで、「前状態/次状態」のボタンを押せば、前ターン/次ターンの情報を表示できます。
+4. 「テーブル情報」エリアで、現在状態を確認できます。
