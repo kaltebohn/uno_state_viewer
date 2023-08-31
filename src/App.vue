@@ -145,7 +145,7 @@ export default {
           <tr>
             <th class="seat-cell">席番号</th>
             <th class="score-cell">得点</th>
-            <th class="player-cards-cell">手札</th>
+            <th class="player-hands-cell">手札</th>
           </tr>
         </thead>
         <tbody>
@@ -156,9 +156,9 @@ export default {
             <td :class="['score-cell', {'current-player-cell' : playerIdx === states[stateIdx].currentPlayer}]">
               {{ states[stateIdx].playerScores[playerIdx] }}
             </td>
-            <td :class="['player-cards-cell', {'current-player-cell' : playerIdx === states[stateIdx].currentPlayer}]">
-              <div class="cards" v-if="states[stateIdx].playerCards[playerIdx] !== 'Empty'">
-                <div v-for="card in states[stateIdx].playerCards[playerIdx]" :class="['card', parseColor(card), {'wild-customizable' : (parsePattern(card) === 'WC')}]">
+            <td :class="['player-hand-cell', {'current-player-cell' : playerIdx === states[stateIdx].currentPlayer}]">
+              <div class="cards" v-if="states[stateIdx].playerHands[playerIdx] !== 'Empty'">
+                <div v-for="card in states[stateIdx].playerHands[playerIdx]" :class="['card', parseColor(card), {'wild-customizable' : (parsePattern(card) === 'WC')}]">
                   {{ parsePattern(card) }}
                 </div>
               </div>
@@ -267,7 +267,7 @@ export default {
     width: 8%;
   }
 
-  .player-cards-cell {
+  .player-hands-cell {
     width: 84%;
   }
 
