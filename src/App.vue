@@ -130,7 +130,7 @@ export default {
     <div>
       <ul>
         <li>現在のプレイヤ: {{ states[stateIdx].currentPlayer }}</li>
-        <li>周順: {{ states[stateIdx].isNormalOrder ? "正順" : "逆順" }}</li>
+        <li>周順: {{ states[stateIdx].isNormalOrder == 1 ? "正順" : "逆順" }}</li>
         <li>現在の着手型: {{ states[stateIdx].currentActionType }}</li>
       </ul>
       <h3>場のカード</h3>
