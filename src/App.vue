@@ -120,9 +120,10 @@ export default {
   <br>
   <div class="state-cursor-area" v-if="states.length > 0">
     <h2>表示中の状態</h2>
-    <p>状態: {{ stateIdx + 1 }} / {{ states.length }}</p>
+    <p>状態: {{ stateIdx }} / {{ states.length - 1 }}</p>
     <input type="button" value="前状態" @click="decrimentStateIdx">
     <input type="button" value="次状態" @click="incrementStateIdx">
+    <p>直接指定: <input size="2" v-model.number="stateIdx"></p>
   </div>
   <br>
   <div class="table-information-area" v-if="states.length > 0">
