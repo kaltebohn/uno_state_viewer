@@ -1,90 +1,14 @@
 <script>
-const UnoColor = {
-  Red:    "red",
-  Yellow: "yellow",
-  Green:  "green",
-  Blue:   "blue",
-  Wild:   "wild"
-};
-
-const UnoPattern = {
-  Zero:             "0",
-  One:              "1",
-  Two:              "2",
-  Three:            "3",
-  Four:             "4",
-  Five:             "5",
-  Six:              "6",
-  Seven:            "7",
-  Eight:            "8",
-  Nine:             "9",
-  Skip:             "Skip",
-  Reverse:          "Rev",
-  DrawTwo:          "D2",
-  Wild:             "W",
-  WildDraw4:        "WD4",
-  WildShuffleHands: "WSH",
-  WildCustomizable: "WC"
-};
-
 export default {
   data() {
     return {
       stateIdx: 0,
-      states:    []
+      states:   []
     }
   },
   methods: {
-    parseColor(cardText) {
-      switch (cardText[0]) {
-        case "R":
-          return UnoColor.Red;
-        case "Y":
-          return UnoColor.Yellow;
-        case "G":
-          return UnoColor.Green;
-        case "B":
-          return UnoColor.Blue;
-        default:
-          return UnoColor.Wild;
-      }
-    },
-    parsePattern(cardText) {
-      if (cardText.includes("DrawTwo")) {
-        return UnoPattern.DrawTwo;
-      } else if (cardText.includes("Reverse")) {
-        return UnoPattern.Reverse;
-      } else if (cardText.includes("Skip")) {
-        return UnoPattern.Skip;
-      } else if (cardText.includes("WildDraw4")) {
-        return UnoPattern.WildDraw4;
-      } else if (cardText.includes("WildShuffleHands")) {
-        return UnoPattern.WildShuffleHands;
-      } else if (cardText.includes("WildCustomizable")) {
-        return UnoPattern.WildCustomizable;
-      } else if (cardText.includes("Wild")) {
-        return UnoPattern.Wild;
-      } else if (cardText.includes("0")) {
-        return UnoPattern.Zero;
-      } else if (cardText.includes("1")) {
-        return UnoPattern.One;
-      } else if (cardText.includes("2")) {
-        return UnoPattern.Two
-      } else if (cardText.includes("3")) {
-        return UnoPattern.Three;
-      } else if (cardText.includes("4")) {
-        return UnoPattern.Four;
-      } else if (cardText.includes("5")) {
-        return UnoPattern.Five;
-      } else if (cardText.includes("6")) {
-        return UnoPattern.Six;
-      } else if (cardText.includes("7")) {
-        return UnoPattern.Seven;
-      } else if (cardText.includes("8")) {
-        return UnoPattern.Eight;
-      } else if (cardText.includes("9")) {
-        return UnoPattern.Nine;
-      }
+    digPatternName(pattern) {
+        return pattern.Number || pattern.Action || pattern.Wild
     },
     loadLog() {
       const file = this.$refs.file.files[0];
@@ -129,13 +53,13 @@ export default {
     <h2>テーブル情報</h2>
     <div>
       <ul>
-        <li>現在のプレイヤ: {{ states[stateIdx].currentPlayer }}</li>
-        <li>周順: {{ states[stateIdx].isNormalOrder == 1 ? "正順" : "逆順" }}</li>
-        <li>現在の着手型: {{ states[stateIdx].currentActionType }}</li>
+        <li>現在の席: {{ states[stateIdx].current_seat_num }}</li>
+        <li>周順: {{ states[stateIdx].is_normal_order ? "正順" : "逆順" }}</li>
+        <li>現在の着手型: {{ states[stateIdx].action_type }}</li>
       </ul>
       <h3>場のカード</h3>
-      <div :class="['card', parseColor(states[stateIdx].tableColor)]"> <!-- 場のカードは場の色の反映させたいので、白いワイルドのクラスは指定しない。 -->
-        {{ parsePattern(states[stateIdx].tablePattern) }}
+      <div :class="['card', states[stateIdx].table_card.color]">
+        {{ digPatternName(states[stateIdx].table_card.pattern) }}
       </div>
     </div>
     <h2>プレイヤ情報</h2>
@@ -144,22 +68,18 @@ export default {
         <thead>
           <tr>
             <th class="seat-cell">席番号</th>
-            <th class="score-cell">得点</th>
             <th class="player-hands-cell">手札</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="playerIdx in [0, 1, 2, 3]">
-            <td :class="['seat-cell', {'current-player-cell' : playerIdx === states[stateIdx].currentPlayer}]">
-              {{ states[stateIdx].playerSeats[playerIdx] }}
+          <tr v-for="seatIdx in [0, 1, 2, 3]">
+            <td :class="['seat-cell', {'current-player-cell' : seatIdx === states[stateIdx].current_seat_num}]">
+              {{ seatIdx }}
             </td>
-            <td :class="['score-cell', {'current-player-cell' : playerIdx === states[stateIdx].currentPlayer}]">
-              {{ states[stateIdx].playerScores[playerIdx] }}
-            </td>
-            <td :class="['player-hand-cell', {'current-player-cell' : playerIdx === states[stateIdx].currentPlayer}]">
-              <div class="cards" v-if="states[stateIdx].playerHands[playerIdx] !== 'Empty'">
-                <div v-for="card in states[stateIdx].playerHands[playerIdx]" :class="['card', parseColor(card), {'wild-customizable' : (parsePattern(card) === 'WC')}]">
-                  {{ parsePattern(card) }}
+            <td :class="['player-hand-cell', {'current-player-cell' : seatIdx === states[stateIdx].current_seat_num}]">
+              <div class="cards" v-if="states[stateIdx].player_hands[seatIdx] !== 'Empty'">
+                <div v-for="card in states[stateIdx].player_hands[seatIdx]" :class="['card', card.color]">
+                  {{ digPatternName(card.pattern) }}
                 </div>
               </div>
             </td>
@@ -217,33 +137,26 @@ export default {
   }
 
   /* カードの色。 */
-  .red {
+  .Red {
     color: white;
     background-color: red;
   }
-  .yellow {
+  .Yellow {
     color: black;
     background-color: yellow;
   }
-  .green {
+  .Green {
     color: white;
     background-color: green;
   }
-  .blue {
+  .Blue {
     color: white;
     background-color: blue;
   }
-  .wild {
+  .Wild {
     color: white;
     background: linear-gradient(to bottom,
         black 40%, red 40% 55%, yellow 55% 70%, green 70% 85%, blue 85%);
-  }
-
-  /* カードの模様。色に優先。 */
-  .wild-customizable {
-    color: black;
-    background: none; /* .wildの属性を無効化する。 */
-    background-color: white;
   }
 
   table, th, td {
